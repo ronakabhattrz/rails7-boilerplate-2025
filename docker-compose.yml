@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis:7
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+  web:
+    build: .
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
+    volumes:
+      - .:/rails7_boilerplate
+      - bundle_cache:/usr/local/bundle
+      - node_modules:/rails7_boilerplate/node_modules
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@db:5432/rails7_boilerplate_development
+      REDIS_URL: redis://redis:6379/1
+    depends_on:
+      - db
+      - redis
+
+  sidekiq:
+    build: .
+    command: bundle exec sidekiq
+    volumes:
+      - .:/rails7_boilerplate
+      - bundle_cache:/usr/local/bundle
+      - node_modules:/rails7_boilerplate/node_modules
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@db:5432/rails7_boilerplate_development
+      REDIS_URL: redis://redis:6379/1
+    depends_on:
+      - db
+      - redis
+
+volumes:
+  postgres_data:
+  redis_data:
+  bundle_cache:
+  node_modules: 
