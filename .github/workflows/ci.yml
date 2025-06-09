@@ -2,6 +2,7 @@ name: CI
 
 on:
   pull_request:
+    branches: [ main ]
   push:
     branches: [ main ]
 
@@ -73,10 +74,9 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
-
     services:
       postgres:
-        image: postgres:14
+        image: postgres:latest
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
@@ -88,36 +88,34 @@ jobs:
           --health-timeout 5s
           --health-retries 5
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+    env:
+      RAILS_ENV: test
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_HOST: localhost
 
+    steps:
+      - uses: actions/checkout@v4
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: .ruby-version
+          ruby-version: '3.3.0'
           bundler-cache: true
-
       - name: Install dependencies
         run: |
+          sudo apt-get update
+          sudo apt-get install -y libpq-dev
           bundle install
-          yarn install
-
       - name: Setup database
-        env:
-          RAILS_ENV: test
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_HOST: localhost
         run: |
-          bin/rails db:create
-          bin/rails db:schema:load
-
+          bundle exec rails db:create
+          bundle exec rails db:schema:load
+      - name: Generate RSpec binstub
+        run: bundle binstubs rspec-core
       - name: Run tests
-        env:
-          RAILS_ENV: test
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_HOST: localhost
         run: bin/rspec
+      - name: Run RuboCop
+        run: bin/rubocop
+      - name: Run Brakeman
+        run: bin/brakeman --no-pager
 
