@@ -8,7 +8,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Run Linter
-        uses: super-linter/super-linter@v5
+        uses: super-linter/super-linter@v7
         env:
           VALIDATE_ALL_CODEBASE: true
           DEFAULT_BRANCH: main
