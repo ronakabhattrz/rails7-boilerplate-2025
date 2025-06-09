@@ -95,3 +95,12 @@ group :test do
   gem "vcr"
   gem "webmock"
 end
+
+# Use Sass for stylesheets
+gem "sassc-rails"
+
+# Use Tailwind CSS for styling
+gem "tailwindcss-rails"
+
+# Use browser gem for browser detection
+gem "browser"

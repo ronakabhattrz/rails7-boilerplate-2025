@@ -15,7 +15,7 @@ Rails.application.configure do
   # this is usually not necessary, and can slow down your test suite. However, it's
   # recommended that you enable it in continuous integration systems to ensure eager
   # loading is working properly before deploying your code.
-  config.eager_load = ENV["CI"].present?
+  config.eager_load = true
 
   # Configure public file server for tests with Cache-Control for performance.
   config.public_file_server.headers = { "Cache-Control" => "public, max-age=#{1.hour.to_i}" }
@@ -48,4 +48,11 @@ Rails.application.configure do
 
   # Raise error when a before_action's only/except options reference missing actions.
   config.action_controller.raise_on_missing_callback_actions = true
+
+  # Configure Active Storage
+  config.active_storage.service = :test
+
+  # Configure Action Mailer
+  config.action_mailer.delivery_method = :test
+  config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
 end
