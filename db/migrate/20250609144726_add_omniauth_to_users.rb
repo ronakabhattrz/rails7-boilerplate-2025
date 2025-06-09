@@ -5,6 +5,6 @@ class AddOmniauthToUsers < ActiveRecord::Migration[7.1]
     add_column :users, :name, :string
     add_column :users, :avatar_url, :string
 
-    add_index :users, [:provider, :uid], unique: true
+    add_index :users, [ :provider, :uid ], unique: true
   end
 end
