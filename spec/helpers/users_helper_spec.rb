@@ -13,4 +13,4 @@ RSpec.describe UsersHelper, type: :helper do
       expect(helper.user_avatar(user)).to eq('avatar.png')
     end
   end
-end 
+end

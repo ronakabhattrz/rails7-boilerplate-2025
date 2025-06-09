@@ -23,4 +23,4 @@ RSpec.describe 'users/show', type: :view do
   it 'displays the delete account button' do
     expect(rendered).to have_button('Delete Account')
   end
-end 
+end

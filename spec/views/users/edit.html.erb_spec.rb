@@ -12,4 +12,4 @@ RSpec.describe 'users/edit', type: :view do
     expect(rendered).to have_field('Email')
     expect(rendered).to have_button('Update User')
   end
-end 
+end

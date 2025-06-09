@@ -21,4 +21,4 @@ RSpec.describe 'users/posts', type: :view do
   it 'displays the user avatar' do
     expect(rendered).to have_css('img[src*="default-avatar.png"]')
   end
-end 
+end
